@@ -2,6 +2,7 @@ package transfer
 
 import (
 	"github.com/giskook/gotcp"
+	"time"
 )
 
 type DownstreamCallback struct{}
@@ -32,5 +33,14 @@ func (this *DownstreamCallback) OnClose(c *gotcp.Conn) {
 }
 
 func (this *DownstreamCallback) OnMessage(c *gotcp.Conn, p gotcp.Packet) bool {
+	var conn *Conn
+	for i := 0; i <= int(NewConnsUpstream().index); i++ {
+		conn = nil
+		conn = NewConnsUpstream().connsindex[uint32(i)]
+		if conn != nil {
+			conn.conn.AsyncWritePacket(p, time.Second)
+		}
+	}
+
 	return true
 }
