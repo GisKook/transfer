@@ -1,6 +1,6 @@
 {
 	"Configure":{
-		"UpstreamPort":"8989",
+		"UpstreamPort":"8788",
 			"DownstreamPort":"8787",
 			"ReadLimit":300,
 			"WriteLimit":30000,

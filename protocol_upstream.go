@@ -34,7 +34,7 @@ func (this *UpstreamProtocol) ReadPacket(c *gotcp.Conn) (gotcp.Packet, error) {
 		}
 
 		return &UpstreamPacket{
-			buf: data[0:readLengh],
+			buf: AddPackage(data[0:readLengh]),
 		}, nil
 	}
 }
