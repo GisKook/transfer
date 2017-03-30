@@ -2,6 +2,9 @@ package transfer
 
 import (
 	"github.com/giskook/gotcp"
+	"github.com/giskook/transfer/conn"
+	"github.com/giskook/transfer/pkg"
+	"github.com/giskook/transfer/protocol"
 	"log"
 )
 
@@ -17,7 +20,7 @@ type DownstreamProtocol struct {
 }
 
 func (this *DownstreamProtocol) ReadPacket(c *gotcp.Conn) (gotcp.Packet, error) {
-	smconn := c.GetExtraData().(*Conn)
+	smconn := c.GetExtraData().(*conn.Conn)
 	smconn.UpdateReadflag()
 
 	buffer := smconn.GetBuffer()
@@ -36,24 +39,38 @@ func (this *DownstreamProtocol) ReadPacket(c *gotcp.Conn) (gotcp.Packet, error) 
 			}
 			buffer.Write(data[0:readLengh])
 
-			//	return &DownstreamPacket{
-			//		buf: data[0:readLengh],
-			//	}, nil
+			//		return &DownstreamPacket{
+			//			buf: data[0:readLengh],
+			//		}, nil
 		}
-		cmdid, pkglen := CheckProtocol(buffer)
-		log.Printf("protocol id %d\n", cmdid)
+		cmdid, pkglen := protocol.CheckProtocol(buffer)
+		log.Printf("protocol id %x length %d\n", cmdid, pkglen)
 
 		pkgbyte := make([]byte, pkglen)
 		buffer.Read(pkgbyte)
+		log.Println("Read")
 		switch cmdid {
-		case PROTOCOL_OK:
-			return &DownstreamPacket{
-				buf: DelPackage(pkgbyte),
-			}, nil
+		case protocol.PROTOCOL_DOWN_REQ_REGISTER:
+			log.Println("PROTOCOL_DOWN_REQ_CANCEL")
+			p := protocol.ParseDownRegister(pkgbyte)
 			smconn.ReadMore = false
-		case PROTOCOL_ILLEGAL:
+
+			return pkg.NewTransparentTransmissionPakcet(cmdid, p), nil
+		case protocol.PROTOCOL_DOWN_REQ_CANCEL:
+			p := protocol.ParseDownCancel(pkgbyte)
+			smconn.ReadMore = false
+
+			return pkg.NewTransparentTransmissionPakcet(cmdid, p), nil
+
+		case protocol.PROTOCOL_DOWN_TRANSFER:
+			p := protocol.ParseDownTransfer(pkgbyte)
+			smconn.ReadMore = false
+
+			return pkg.NewTransparentTransmissionPakcet(cmdid, p), nil
+
+		case protocol.PROTOCOL_ILLEGAL:
 			smconn.ReadMore = true
-		case PROTOCOL_HALF_PACK:
+		case protocol.PROTOCOL_HALF_PACK:
 			smconn.ReadMore = true
 		}
 	}

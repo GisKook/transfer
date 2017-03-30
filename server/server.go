@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"github.com/giskook/gotcp"
 	"github.com/giskook/transfer"
+	"github.com/giskook/transfer/conf"
+	"github.com/giskook/transfer/event_handler"
 	"log"
 	"net"
 	"os"
@@ -16,9 +18,9 @@ import (
 func main() {
 	runtime.GOMAXPROCS(runtime.NumCPU())
 	// read configuration
-	conf, err := transfer.ReadConfig("./conf.json")
-	configuration := conf.Configure
-	transfer.SetConfiguration(configuration)
+	_conf, err := conf.ReadConfig("./conf.json")
+	configuration := _conf.Configure
+	conf.SetConfiguration(configuration)
 
 	checkError(err)
 
@@ -33,7 +35,7 @@ func main() {
 		PacketSendChanLimit:    20,
 		PacketReceiveChanLimit: 20,
 	}
-	srv := gotcp.NewServer(config, &transfer.UpstreamCallback{}, &transfer.UpstreamProtocol{})
+	srv := gotcp.NewServer(config, &event_handler.UpstreamCallback{}, &transfer.UpstreamProtocol{})
 
 	// create transfer server
 	upstreamconf := &transfer.ServerConfig{
@@ -56,7 +58,7 @@ func main() {
 		PacketSendChanLimit:    20,
 		PacketReceiveChanLimit: 20,
 	}
-	dsrv := gotcp.NewServer(dconfig, &transfer.DownstreamCallback{}, &transfer.DownstreamProtocol{})
+	dsrv := gotcp.NewServer(dconfig, &event_handler.DownstreamCallback{}, &transfer.DownstreamProtocol{})
 
 	// create transfer server
 	downstreamconf := &transfer.ServerConfig{

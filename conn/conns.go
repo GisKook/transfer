@@ -1,4 +1,4 @@
-package transfer
+package conn
 
 import (
 	"sync/atomic"

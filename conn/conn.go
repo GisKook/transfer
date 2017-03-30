@@ -1,9 +1,9 @@
-package transfer
+package conn
 
 import (
 	"bytes"
 	"github.com/giskook/gotcp"
-	"github.com/giskook/smarthome-access/base"
+	//	"github.com/giskook/transfer/base"
 	"log"
 	"time"
 )
@@ -15,38 +15,36 @@ type ConnConfig struct {
 	ConnCheckInterval uint16
 	ReadLimit         uint16
 	WriteLimit        uint16
-	NsqChanLimit      uint16
 }
 
 type Conn struct {
-	conn                 *gotcp.Conn
-	config               *ConnConfig
-	recieveBuffer        *bytes.Buffer
-	ticker               *time.Ticker
-	readflag             int64
-	writeflag            int64
-	packetNsqReceiveChan chan gotcp.Packet
-	closeChan            chan bool
-	index                uint32
-	ID                   uint64
-	Status               uint8
-	Gateway              *base.Gateway
-	ReadMore             bool
+	conn                       *gotcp.Conn
+	config                     *ConnConfig
+	recieveBuffer              *bytes.Buffer
+	ticker                     *time.Ticker
+	readflag                   int64
+	writeflag                  int64
+	closeChan                  chan bool
+	index                      uint32
+	ID                         uint64
+	Status                     uint8
+	PeerID                     uint64
+	TransparentTransmissionKey uint32
+	ReadMore                   bool
 }
 
 func NewConn(conn *gotcp.Conn, config *ConnConfig) *Conn {
 	return &Conn{
-		conn:                 conn,
-		recieveBuffer:        bytes.NewBuffer([]byte{}),
-		config:               config,
-		readflag:             time.Now().Unix(),
-		writeflag:            time.Now().Unix(),
-		ticker:               time.NewTicker(time.Duration(config.ConnCheckInterval) * time.Second),
-		packetNsqReceiveChan: make(chan gotcp.Packet, config.NsqChanLimit),
-		closeChan:            make(chan bool),
-		index:                0,
-		Status:               ConnUnauth,
-		ReadMore:             true,
+		conn:          conn,
+		recieveBuffer: bytes.NewBuffer([]byte{}),
+		config:        config,
+		readflag:      time.Now().Unix(),
+		writeflag:     time.Now().Unix(),
+		ticker:        time.NewTicker(time.Duration(config.ConnCheckInterval) * time.Second),
+		closeChan:     make(chan bool),
+		index:         0,
+		Status:        ConnUnauth,
+		ReadMore:      true,
 	}
 }
 
@@ -54,7 +52,6 @@ func (c *Conn) Close() {
 	c.closeChan <- true
 	c.ticker.Stop()
 	c.recieveBuffer.Reset()
-	close(c.packetNsqReceiveChan)
 	close(c.closeChan)
 }
 
@@ -62,24 +59,7 @@ func (c *Conn) GetBuffer() *bytes.Buffer {
 	return c.recieveBuffer
 }
 
-func (c *Conn) writeToclientLoop() {
-	defer func() {
-		c.conn.Close()
-	}()
-
-	for {
-		select {
-		case p := <-c.packetNsqReceiveChan:
-			if p != nil {
-				c.conn.GetRawConn().Write(p.Serialize())
-			}
-		case <-c.closeChan:
-			return
-		}
-	}
-}
-
-func (c *Conn) SendToGateway(p gotcp.Packet) {
+func (c *Conn) SendToTerm(p gotcp.Packet) {
 	//c.packetNsqReceiveChan <- p
 	c.conn.AsyncWritePacket(p, time.Second)
 }
@@ -123,5 +103,4 @@ func (c *Conn) checkHeart() {
 
 func (c *Conn) Do() {
 	go c.checkHeart()
-	go c.writeToclientLoop()
 }
