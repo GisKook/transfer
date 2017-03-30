@@ -1,8 +1,8 @@
 package protocol
 
 import (
-	"bytes"
-	"github.com/giskook/transfer/base"
+//"bytes"
+//"github.com/giskook/transfer/base"
 )
 
 type UpTransferPacket struct {
