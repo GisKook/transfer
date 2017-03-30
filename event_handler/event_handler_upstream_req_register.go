@@ -12,10 +12,16 @@ func event_handler_up_req_register(c *gotcp.Conn, p *pkg.TransparentTransmission
 	if connection != nil {
 		register_pkg := p.Packet.(*protocol.UpRegisterPacket)
 		connection.ID = register_pkg.ID
-		connection.PeerID = register_pkg.PeerRouterRegisterID
+		//connection.PeerID = register_pkg.PeerRouterRegisterID
 		connection.TransparentTransmissionKey = register_pkg.TransparentTransmissionKey
-		conn.NewConnsDownstream().SetID(register_pkg.ID, connection)
-		register_pkg.Status = 0
+		ok, router_id := NewConnsDownstream().CheckKey(register_pkg.TransparentTransmissionKey)
+
+		connection.PeerID = router_id
+		if ok {
+			register_pkg.Status = 0
+		} else {
+			register_pkg.Status = 1
+		}
 		connection.SendToTerm(p)
 	}
 }
