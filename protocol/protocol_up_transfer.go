@@ -12,16 +12,17 @@ type UpTransferPacket struct {
 }
 
 func (p *UpTransferPacket) Serialize() []byte {
-	var writer bytes.Buffer
-	WriteHeader(&writer, 0,
-		PROTOCOL_DOWN_TRANSFER, p.ID, p.SerialID)
-	writer.Write(p.Value)
+	return p.Value
+	//var writer bytes.Buffer
+	//WriteHeader(&writer, 0,
+	//	PROTOCOL_DOWN_TRANSFER, p.ID, p.SerialID)
+	//writer.Write(p.Value)
 
-	base.WriteLength(&writer)
-	base.WriteWord(&writer, CRC_ISO13239(writer.Bytes()[1:], uint16(writer.Len()-1)))
-	writer.WriteByte(PROTOCOL_END_FLAG)
+	//base.WriteLength(&writer)
+	//base.WriteWord(&writer, CRC_ISO13239(writer.Bytes()[1:], uint16(writer.Len()-1)))
+	//writer.WriteByte(PROTOCOL_END_FLAG)
 
-	return writer.Bytes()
+	//return writer.Bytes()
 }
 
 func ParseUpTransfer(buffer []byte) *UpTransferPacket {
