@@ -69,7 +69,7 @@ func (cs *Conns) Check(uid uint64) bool {
 	return ok
 }
 
-func (cs *Conns) CheckKey(key string) (bool, uint64) {
+func (cs *Conns) CheckKey(key uint32) (bool, uint64) {
 	for _, conn := range cs.connsuid {
 		if conn.TransparentTransmissionKey == key {
 			return true, conn.ID
