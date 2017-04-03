@@ -1,7 +1,7 @@
 {
 	"Configure":{
-		"UpstreamPort":"8788",
-			"DownstreamPort":"8787",
+		"UpstreamPort":"8074",
+			"DownstreamPort":"8073",
 			"ReadLimit":300,
 			"WriteLimit":30000,
 			"ConnTimeout":300,
