@@ -51,12 +51,13 @@ func (this *DownstreamProtocol) ReadPacket(c *gotcp.Conn) (gotcp.Packet, error) 
 		log.Println("Read")
 		switch cmdid {
 		case protocol.PROTOCOL_DOWN_REQ_REGISTER:
-			log.Println("PROTOCOL_DOWN_REQ_CANCEL")
+			log.Println("PROTOCOL_DOWN_REQ_REGISTER")
 			p := protocol.ParseDownRegister(pkgbyte)
 			smconn.ReadMore = false
 
 			return pkg.NewTransparentTransmissionPakcet(cmdid, p), nil
 		case protocol.PROTOCOL_DOWN_REQ_CANCEL:
+			log.Println("PROTOCOL_DOWN_REQ_CANCEL")
 			p := protocol.ParseDownCancel(pkgbyte)
 			smconn.ReadMore = false
 

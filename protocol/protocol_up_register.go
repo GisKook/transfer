@@ -17,7 +17,7 @@ func (p *UpRegisterPacket) Serialize() []byte {
 	var writer bytes.Buffer
 	WriteHeader(&writer, 0,
 		PROTOCOL_UP_REP_REGISTER, p.ID, p.SerialID)
-	writer.WriteByte(0)
+	writer.WriteByte(p.Status)
 	base.WriteDWord(&writer, 0)
 	base.WriteLength(&writer)
 	base.WriteWord(&writer, CRC_ISO13239(writer.Bytes()[1:], uint16(writer.Len()-1)))

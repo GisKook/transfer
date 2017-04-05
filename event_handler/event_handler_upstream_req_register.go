@@ -5,6 +5,7 @@ import (
 	"github.com/giskook/transfer/conn"
 	"github.com/giskook/transfer/pkg"
 	"github.com/giskook/transfer/protocol"
+	"log"
 )
 
 func event_handler_up_req_register(c *gotcp.Conn, p *pkg.TransparentTransmissionPacket) {
@@ -15,6 +16,9 @@ func event_handler_up_req_register(c *gotcp.Conn, p *pkg.TransparentTransmission
 		//connection.PeerID = register_pkg.PeerRouterRegisterID
 		connection.TransparentTransmissionKey = register_pkg.TransparentTransmissionKey
 		ok, router_id := conn.NewConnsDownstream().CheckKey(register_pkg.TransparentTransmissionKey)
+		log.Println(ok)
+		log.Println(router_id)
+		conn.NewConnsUpstream().SetID(register_pkg.ID, connection)
 
 		connection.PeerID = router_id
 		if ok {
@@ -22,6 +26,6 @@ func event_handler_up_req_register(c *gotcp.Conn, p *pkg.TransparentTransmission
 		} else {
 			register_pkg.Status = 1
 		}
-		connection.SendToTerm(p)
+		connection.SendToTerm(register_pkg)
 	}
 }
