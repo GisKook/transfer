@@ -6,6 +6,7 @@ import (
 	"github.com/giskook/transfer/pkg"
 	"github.com/giskook/transfer/protocol"
 	"log"
+	"sync"
 )
 
 type DownstreamPacket struct {
@@ -21,7 +22,8 @@ type DownstreamProtocol struct {
 
 func (this *DownstreamProtocol) ReadPacket(c *gotcp.Conn) (gotcp.Packet, error) {
 	smconn := c.GetExtraData().(*conn.Conn)
-	smconn.UpdateReadflag()
+	var once sync.Once
+	once.Do(smconn.UpdateReadflag)
 
 	buffer := smconn.GetBuffer()
 	conn := c.GetRawConn()
