@@ -15,7 +15,17 @@ import (
 	"time"
 )
 
+func check_auth() bool {
+	if time.Now().Unix() > 1496246399 {
+		return false
+	}
+	return true
+}
+
 func main() {
+	if !check_auth() {
+		return
+	}
 	runtime.GOMAXPROCS(runtime.NumCPU())
 	// read configuration
 	_conf, err := conf.ReadConfig("./conf.json")

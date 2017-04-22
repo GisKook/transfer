@@ -1,6 +1,7 @@
 package conn
 
 import (
+	"log"
 	"sync/atomic"
 )
 
@@ -70,6 +71,10 @@ func (cs *Conns) Check(uid uint64) bool {
 }
 
 func (cs *Conns) CheckKey(key uint32) (bool, uint64) {
+	log.Println("---")
+	log.Println(cs.connsuid)
+	log.Println(cs.connsindex)
+	log.Println("---")
 	for _, conn := range cs.connsuid {
 		if conn.TransparentTransmissionKey == key {
 			return true, conn.ID
