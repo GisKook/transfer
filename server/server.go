@@ -6,7 +6,7 @@ import (
 	"github.com/giskook/transfer"
 	"github.com/giskook/transfer/conf"
 	"github.com/giskook/transfer/event_handler"
-	//"github.com/giskook/transfer/http_server"
+	"github.com/giskook/transfer/http_server"
 	"log"
 	"net"
 	"os"
@@ -17,7 +17,7 @@ import (
 )
 
 func check_auth() bool {
-	if time.Now().Unix() > 1496246399 {
+	if time.Now().Unix() > 1501516799 {
 		return false
 	}
 	return true
@@ -82,9 +82,9 @@ func main() {
 	server_downstream.Start()
 
 	// start httpserver
-	//	hs := http_server.GetHttpServer()
-	//	hs.Init()
-	//	go hs.Start(configuration.HttpAddr)
+	hs := http_server.GetHttpServer()
+	hs.Init()
+	go hs.Start(configuration.HttpAddr)
 
 	// catchs system signal
 	chSig := make(chan os.Signal)

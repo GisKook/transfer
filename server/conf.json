@@ -1,11 +1,12 @@
 {
 	"Configure":{
 		"UpstreamPort":"8074",
-			"DownstreamPort":"8073",
-			"ReadLimit":300,
-			"WriteLimit":30000,
-			"ConnTimeout":300,
-			"ConnCheckInterval":300,
-			"ServerStatistics":300
+		"DownstreamPort":"8073",
+		"ReadLimit":300,
+		"WriteLimit":30000,
+		"ConnTimeout":300,
+		"ConnCheckInterval":300,
+		"ServerStatistics":300,
+		"HttpAddr":":8876"
 	}
 }
