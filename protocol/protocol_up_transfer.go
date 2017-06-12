@@ -6,9 +6,7 @@ import (
 )
 
 type UpTransferPacket struct {
-	ID       uint64
-	SerialID uint16
-	Value    []byte
+	Value []byte
 }
 
 func (p *UpTransferPacket) Serialize() []byte {
