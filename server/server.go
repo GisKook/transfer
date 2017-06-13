@@ -6,6 +6,7 @@ import (
 	"github.com/giskook/transfer"
 	"github.com/giskook/transfer/conf"
 	"github.com/giskook/transfer/event_handler"
+	"github.com/giskook/transfer/http_server"
 	"log"
 	"net"
 	"os"
@@ -79,6 +80,11 @@ func main() {
 	// starts service
 	fmt.Println("downstream listening:", dlistener.Addr())
 	server_downstream.Start()
+
+	// start httpserver
+	hs := http_server.GetHttpServer()
+	hs.Init()
+	go hs.Start(configuration.HttpAddr)
 
 	// catchs system signal
 	chSig := make(chan os.Signal)

@@ -13,6 +13,7 @@ type Conf struct {
 	ConnTimeout       uint16
 	ConnCheckInterval uint16
 	ServerStatistics  uint16
+	HttpAddr          string
 }
 
 type Configuration struct {
