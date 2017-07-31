@@ -6,6 +6,8 @@ const (
 
 	// query all routers
 	HTTP_QUERY_ALL_ROUTERS string = "/plc/query_all_routers"
+	// query all win clients
+	HTTP_QUERY_ALL_WIN_CLIENT string = "/plc/query_all_win_client"
 
 	//////////////RESPONSE////////////////
 	//HTTP_RESPONSE_RESULT               string = "result"

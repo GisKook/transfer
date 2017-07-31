@@ -57,6 +57,7 @@ func (this *UpstreamProtocol) ReadPacket(c *gotcp.Conn) (gotcp.Packet, error) {
 		case protocol.PROTOCOL_UP_TRANSFER:
 			p := protocol.ParseUpTransfer(pkgbyte)
 			smconn.ReadMore = false
+			smconn.RecvByteCount += uint32(pkglen)
 
 			return pkg.NewTransparentTransmissionPakcet(cmdid, p), nil
 

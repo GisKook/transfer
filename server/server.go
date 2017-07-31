@@ -17,7 +17,7 @@ import (
 )
 
 func check_auth() bool {
-	if time.Now().Unix() > 1501516799 {
+	if time.Now().Unix() > 1506787199 {
 		return false
 	}
 	return true
@@ -85,6 +85,7 @@ func main() {
 	hs := http_server.GetHttpServer()
 	hs.Init()
 	go hs.Start(configuration.HttpAddr)
+	log.Println("http listening:" + configuration.HttpAddr)
 
 	// catchs system signal
 	chSig := make(chan os.Signal)

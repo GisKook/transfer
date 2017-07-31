@@ -22,6 +22,7 @@ func GetHttpServer() *HttpServer {
 
 func (server *HttpServer) Init() {
 	http.HandleFunc(HTTP_QUERY_ALL_ROUTERS, QueryAllRoutersHandler)
+	http.HandleFunc(HTTP_QUERY_ALL_WIN_CLIENT, QueryAllWinClientHandler)
 }
 
 func (server *HttpServer) Start(addr string) {

@@ -18,6 +18,7 @@ func event_handler_up_req_register(c *gotcp.Conn, p *pkg.TransparentTransmission
 		ok, router_id := conn.NewConnsDownstream().CheckKey(register_pkg.TransparentTransmissionKey)
 		log.Println(ok)
 		log.Println(router_id)
+		connection.Mode = 1
 		conn.NewConnsUpstream().SetID(register_pkg.ID, connection)
 
 		connection.PeerID = router_id

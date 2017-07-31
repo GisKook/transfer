@@ -15,6 +15,10 @@ func (p *UpTransferPacket) Serialize() []byte {
 	return p.Value
 }
 
+func (p *UpTransferPacket) Len() uint32 {
+	return uint32(len(p.Value))
+}
+
 //func (p *UpTransferPacket) Serialize() []byte {
 //	//return p.Value
 //	var writer bytes.Buffer

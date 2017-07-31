@@ -11,6 +11,11 @@ import (
 var ConnSuccess uint8 = 0
 var ConnUnauth uint8 = 1
 
+const (
+	MODE_TT   uint8 = 1
+	MODE_INIT uint8 = 0
+)
+
 type ConnConfig struct {
 	ConnCheckInterval uint16
 	ReadLimit         uint16
@@ -31,6 +36,11 @@ type Conn struct {
 	PeerID                     uint64
 	TransparentTransmissionKey uint32
 	ReadMore                   bool
+
+	EstablishedTime string
+	RecvByteCount   uint32
+	SendByteCount   uint32
+	Mode            uint8
 }
 
 func NewConn(conn *gotcp.Conn, config *ConnConfig) *Conn {

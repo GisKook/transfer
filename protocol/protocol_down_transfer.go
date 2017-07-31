@@ -25,6 +25,10 @@ func (p *DownTransferPacket) Serialize() []byte {
 	//	return writer.Bytes()
 }
 
+func (p *DownTransferPacket) Len() uint32 {
+	return uint32(len(p.Value))
+}
+
 func ParseDownTransfer(buffer []byte) *DownTransferPacket {
 	reader, length, _, tid, serial := ParseHeader(buffer)
 	value := make([]byte, length-PROTOCOL_COMMON_LEN)

@@ -11,6 +11,10 @@ type RouterProperty struct {
 	RegisterID                 uint64 `json:"RegisterID"`
 	PeerID                     uint64 `json:"PeerID"`
 	TransparentTransmissionKey uint32 `json:"Key"`
+	EstablishedTime            string `json:"EstablishedTime"`
+	RecvByteCount              uint32 `json:"RecvByteCount"`
+	SendByteCount              uint32 `json:"SendByteCount"`
+	Mode                       uint8  `json:"IsTTMode"`
 }
 
 func QueryAllRouters() string {
@@ -20,6 +24,10 @@ func QueryAllRouters() string {
 			RegisterID: v.ID,
 			PeerID:     v.PeerID,
 			TransparentTransmissionKey: v.TransparentTransmissionKey,
+			EstablishedTime:            v.EstablishedTime,
+			RecvByteCount:              v.RecvByteCount,
+			SendByteCount:              v.SendByteCount,
+			Mode:                       v.Mode,
 		})
 	}
 

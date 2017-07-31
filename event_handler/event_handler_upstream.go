@@ -7,6 +7,7 @@ import (
 	"github.com/giskook/transfer/pkg"
 	"github.com/giskook/transfer/protocol"
 	"log"
+	"time"
 )
 
 type UpstreamCallback struct{}
@@ -22,6 +23,7 @@ func (this *UpstreamCallback) OnConnect(c *gotcp.Conn) bool {
 	}
 	_conn := conn.NewConn(c, config)
 
+	_conn.EstablishedTime = time.Now().Format("2006-01-02 15:04:05")
 	c.PutExtraData(_conn)
 
 	_conn.Do()

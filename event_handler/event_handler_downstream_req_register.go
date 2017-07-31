@@ -17,6 +17,7 @@ func event_handler_down_req_register(c *gotcp.Conn, p *pkg.TransparentTransmissi
 		connection.ID = register_pkg.RegisterID
 		connection.PeerID = register_pkg.PeerClientID
 		connection.TransparentTransmissionKey = register_pkg.TransparentTransmissionKey
+		connection.Mode = 1
 		conn.NewConnsDownstream().SetID(register_pkg.RegisterID, connection)
 		register_pkg.Status = 0
 		connection.SendToTerm(p)

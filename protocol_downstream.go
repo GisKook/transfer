@@ -68,6 +68,7 @@ func (this *DownstreamProtocol) ReadPacket(c *gotcp.Conn) (gotcp.Packet, error) 
 		case protocol.PROTOCOL_DOWN_TRANSFER:
 			p := protocol.ParseDownTransfer(pkgbyte)
 			smconn.ReadMore = false
+			smconn.RecvByteCount += uint32(pkglen)
 
 			return pkg.NewTransparentTransmissionPakcet(cmdid, p), nil
 
