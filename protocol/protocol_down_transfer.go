@@ -6,9 +6,7 @@ import (
 )
 
 type DownTransferPacket struct {
-	RouterRegisterID uint64
-	SerialID         uint16
-	Value            []byte
+	Value []byte
 }
 
 func (p *DownTransferPacket) Serialize() []byte {
@@ -30,14 +28,12 @@ func (p *DownTransferPacket) Len() uint32 {
 }
 
 func ParseDownTransfer(buffer []byte) *DownTransferPacket {
-	reader, length, _, tid, serial := ParseHeader(buffer)
-	value := make([]byte, length-PROTOCOL_COMMON_LEN)
-	reader.Read(value)
+	//reader, length, _, tid, serial := ParseHeader(buffer)
+	//value := make([]byte, length-PROTOCOL_COMMON_LEN)
+	//reader.Read(value)
 
 	return &DownTransferPacket{
-		RouterRegisterID: tid,
-		SerialID:         serial,
-		Value:            value,
+		Value: buffer,
 	}
 
 }

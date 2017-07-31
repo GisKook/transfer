@@ -18,11 +18,13 @@ func (this *UpstreamProtocol) ReadPacket(c *gotcp.Conn) (gotcp.Packet, error) {
 	once.Do(smconn.UpdateReadflag)
 
 	buffer := smconn.GetBuffer()
-	conn := c.GetRawConn()
+	_conn := c.GetRawConn()
 	for {
+		readLengh := 0
+		var err error
 		if smconn.ReadMore {
 			data := make([]byte, 2048)
-			readLengh, err := conn.Read(data)
+			readLengh, err = _conn.Read(data)
 			log.Printf("<Up IN>  %x\n", data[0:readLengh])
 			if err != nil {
 				return nil, err
@@ -37,8 +39,15 @@ func (this *UpstreamProtocol) ReadPacket(c *gotcp.Conn) (gotcp.Packet, error) {
 			//			buf: data[0:readLengh],
 			//		}, nil
 		}
-		cmdid, pkglen := protocol.CheckProtocol(buffer)
-		log.Printf("protocol id %d\n", cmdid)
+
+		cmdid := protocol.PROTOCOL_ILLEGAL
+		pkglen := uint16(readLengh)
+		if smconn.Status != conn.ConnSuccess {
+			cmdid, pkglen = protocol.CheckProtocol(buffer)
+			log.Printf("protocol id %d\n", cmdid)
+		} else {
+			cmdid = protocol.PROTOCOL_UP_TRANSFER
+		}
 
 		pkgbyte := make([]byte, pkglen)
 		buffer.Read(pkgbyte)
@@ -56,7 +65,7 @@ func (this *UpstreamProtocol) ReadPacket(c *gotcp.Conn) (gotcp.Packet, error) {
 
 		case protocol.PROTOCOL_UP_TRANSFER:
 			p := protocol.ParseUpTransfer(pkgbyte)
-			smconn.ReadMore = false
+			smconn.ReadMore = true
 			smconn.RecvByteCount += uint32(pkglen)
 
 			return pkg.NewTransparentTransmissionPakcet(cmdid, p), nil

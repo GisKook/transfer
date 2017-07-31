@@ -24,8 +24,10 @@ func event_handler_up_req_register(c *gotcp.Conn, p *pkg.TransparentTransmission
 		connection.PeerID = router_id
 		if ok {
 			register_pkg.Status = 0
+			connection.Status = conn.ConnSuccess
 		} else {
 			register_pkg.Status = 1
+			connection.Status = conn.ConnUnauth
 		}
 		connection.SendToTerm(register_pkg)
 	}

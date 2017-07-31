@@ -26,11 +26,13 @@ func (this *DownstreamProtocol) ReadPacket(c *gotcp.Conn) (gotcp.Packet, error) 
 	once.Do(smconn.UpdateReadflag)
 
 	buffer := smconn.GetBuffer()
-	conn := c.GetRawConn()
+	_conn := c.GetRawConn()
 	for {
+		var readLengh int = 0
+		var err error
 		if smconn.ReadMore {
 			data := make([]byte, 2048)
-			readLengh, err := conn.Read(data)
+			readLengh, err = _conn.Read(data)
 			log.Printf("<Down IN>  %x\n", data[0:readLengh])
 			if err != nil {
 				return nil, err
@@ -45,8 +47,14 @@ func (this *DownstreamProtocol) ReadPacket(c *gotcp.Conn) (gotcp.Packet, error) 
 			//			buf: data[0:readLengh],
 			//		}, nil
 		}
-		cmdid, pkglen := protocol.CheckProtocol(buffer)
-		log.Printf("protocol id %x length %d\n", cmdid, pkglen)
+		var cmdid uint16 = protocol.PROTOCOL_ILLEGAL
+		var pkglen uint16 = uint16(readLengh)
+		if smconn.Status != conn.ConnSuccess {
+			cmdid, pkglen = protocol.CheckProtocol(buffer)
+			log.Printf("protocol id %x length %d\n", cmdid, pkglen)
+		} else {
+			cmdid = protocol.PROTOCOL_DOWN_TRANSFER
+		}
 
 		pkgbyte := make([]byte, pkglen)
 		buffer.Read(pkgbyte)
@@ -67,7 +75,7 @@ func (this *DownstreamProtocol) ReadPacket(c *gotcp.Conn) (gotcp.Packet, error) 
 
 		case protocol.PROTOCOL_DOWN_TRANSFER:
 			p := protocol.ParseDownTransfer(pkgbyte)
-			smconn.ReadMore = false
+			smconn.ReadMore = true
 			smconn.RecvByteCount += uint32(pkglen)
 
 			return pkg.NewTransparentTransmissionPakcet(cmdid, p), nil
