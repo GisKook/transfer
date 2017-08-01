@@ -9,6 +9,12 @@ const (
 	// query all win clients
 	HTTP_QUERY_ALL_WIN_CLIENT string = "/plc/query_all_win_client"
 
+	// query all win clients
+	HTTP_QUERY_WIN_CLIENT          string = "/plc/query_win_client"
+	HTTP_QUERY_WIN_CLIENT_CLIENTID string = "id"
+
+	HTTP_QUERY_ROUTER string = "/plc/query_router"
+
 	//////////////RESPONSE////////////////
 	//HTTP_RESPONSE_RESULT               string = "result"
 	HTTP_RESPONSE_RESULT_SUCCESS uint8 = 0
