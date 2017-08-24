@@ -5,6 +5,7 @@ import (
 	"github.com/giskook/gotcp"
 	//	"github.com/giskook/transfer/base"
 	"log"
+	"sync"
 	"time"
 )
 
@@ -37,6 +38,8 @@ type Conn struct {
 	TransparentTransmissionKey uint32
 	ReadMore                   bool
 
+	closeOnce sync.Once // close the conn, once, per instance
+
 	EstablishedTime string
 	RecvByteCount   uint32
 	SendByteCount   uint32
@@ -59,19 +62,21 @@ func NewConn(conn *gotcp.Conn, config *ConnConfig) *Conn {
 }
 
 func (c *Conn) Close() {
-	c.closeChan <- true
-	c.ticker.Stop()
-	c.recieveBuffer.Reset()
-	close(c.closeChan)
+	c.closeOnce.Do(func() {
+		c.closeChan <- true
+		c.ticker.Stop()
+		c.recieveBuffer.Reset()
+		close(c.closeChan)
+	})
 }
 
 func (c *Conn) GetBuffer() *bytes.Buffer {
 	return c.recieveBuffer
 }
 
-func (c *Conn) SendToTerm(p gotcp.Packet) {
+func (c *Conn) SendToTerm(p gotcp.Packet) error {
 	//c.packetNsqReceiveChan <- p
-	c.conn.AsyncWritePacket(p, time.Second)
+	return c.conn.AsyncWritePacket(p, time.Second)
 }
 
 func (c *Conn) UpdateReadflag() {
@@ -80,6 +85,12 @@ func (c *Conn) UpdateReadflag() {
 
 func (c *Conn) UpdateWriteflag() {
 	c.writeflag = time.Now().Unix()
+}
+
+func (c *Conn) Close2() {
+	if !c.conn.IsClosed() {
+		c.conn.Close()
+	}
 }
 
 func (c *Conn) checkHeart() {

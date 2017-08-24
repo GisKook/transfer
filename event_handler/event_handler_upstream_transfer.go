@@ -15,9 +15,11 @@ func event_handler_up_transfer(c *gotcp.Conn, p *pkg.TransparentTransmissionPack
 		log.Printf("peer id %d\n", peer_id)
 		peer_conn := conn.NewConnsDownstream().GetConn(peer_id)
 		if peer_conn != nil {
-			peer_conn.SendToTerm(p)
-			tt_pkg := p.Packet.(*protocol.UpTransferPacket)
-			connection.SendByteCount += tt_pkg.Len()
+			err := peer_conn.SendToTerm(p)
+			if err == nil {
+				tt_pkg := p.Packet.(*protocol.UpTransferPacket)
+				peer_conn.SendByteCount += tt_pkg.Len()
+			}
 		} else {
 			log.Println("peer connection is nil")
 		}

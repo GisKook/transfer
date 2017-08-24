@@ -9,6 +9,8 @@ import (
 )
 
 type SingleWinClientProperty struct {
+	Result                     uint8  `json:"result"`
+	Desc                       string `json:"desc"`
 	ClientID                   uint64 `json:"WinID"`
 	PeerID                     uint64 `json:"WinPeerID"`
 	TransparentTransmissionKey uint32 `json:"WinKey"`
@@ -34,6 +36,8 @@ func QueryWinClient(clientid string) string {
 		peer_v := conn.NewConnsDownstream().GetConn(v.PeerID)
 		if peer_v != nil {
 			clients := &SingleWinClientProperty{
+				Result:   0,
+				Desc:     "成功",
 				ClientID: v.ID,
 				PeerID:   v.PeerID,
 				TransparentTransmissionKey: v.TransparentTransmissionKey,
@@ -87,5 +91,9 @@ func QueryWinClientHandler(w http.ResponseWriter, r *http.Request) {
 
 	r.ParseForm()
 	clientid := r.Form.Get("id")
+	if clientid == "" {
+		fmt.Fprint(w, EncodingGeneralResponse(HTTP_RESPONSE_RESULT_PARAMTER_ERR))
+		return
+	}
 	fmt.Fprint(w, QueryWinClient(clientid))
 }

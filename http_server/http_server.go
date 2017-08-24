@@ -25,6 +25,7 @@ func (server *HttpServer) Init() {
 	http.HandleFunc(HTTP_QUERY_ALL_WIN_CLIENT, QueryAllWinClientHandler)
 	http.HandleFunc(HTTP_QUERY_WIN_CLIENT, QueryWinClientHandler)
 	http.HandleFunc(HTTP_QUERY_ROUTER, QueryRouterHandler)
+	http.HandleFunc(HTTP_CLOSE_ROUTER_SOCKET, CloseRouterSocketHandler)
 }
 
 func (server *HttpServer) Start(addr string) {

@@ -3,8 +3,6 @@ package transfer
 import (
 	"github.com/giskook/gotcp"
 	"github.com/giskook/transfer/conf"
-	"github.com/giskook/transfer/conn"
-	"log"
 	"net"
 	"time"
 )
@@ -40,7 +38,7 @@ func NewServer(srv *gotcp.Server, config *ServerConfig) *Server {
 }
 
 func (s *Server) Start() {
-	go s.checkStatistics()
+	//go s.checkStatistics()
 	go s.srv.Start(s.config.Listener, s.config.AcceptTimeout)
 }
 
@@ -49,9 +47,9 @@ func (s *Server) Stop() {
 	s.checkconnsticker.Stop()
 }
 
-func (s *Server) checkStatistics() {
-	for {
-		<-s.checkconnsticker.C
-		log.Printf("--------------Upstream Connections : %d ----Downstream Connections : %d ---------------\n", conn.NewConnsUpstream().GetCount(), conn.NewConnsDownstream().GetCount())
-	}
-}
+//func (s *Server) checkStatistics() {
+//	for {
+//		<-s.checkconnsticker.C
+//		log.Printf("--------------Upstream Connections : %d ----Downstream Connections : %d ---------------\n", conn.NewConnsUpstream().GetCount(), conn.NewConnsDownstream().GetCount())
+//	}
+//}

@@ -15,6 +15,7 @@ const (
 
 	HTTP_QUERY_ROUTER string = "/plc/query_router"
 
+	HTTP_CLOSE_ROUTER_SOCKET string = "/plc/close_router_socket"
 	//////////////RESPONSE////////////////
 	//HTTP_RESPONSE_RESULT               string = "result"
 	HTTP_RESPONSE_RESULT_SUCCESS uint8 = 0

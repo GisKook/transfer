@@ -9,6 +9,8 @@ import (
 )
 
 type SingleRouterProperty struct {
+	Result                     uint8  `json:"result"`
+	Desc                       string `json:"desc"`
 	ID                         uint64 `json:"RouterID"`
 	PeerID                     uint64 `json:"RouterPeerID"`
 	TransparentTransmissionKey uint32 `json:"RouterKey"`
@@ -34,6 +36,8 @@ func QueryRouter(clientid string) string {
 		peer_v := conn.NewConnsUpstream().GetConn(v.PeerID)
 		if peer_v != nil {
 			clients := &SingleRouterProperty{
+				Result: 0,
+				Desc:   "成功",
 				ID:     v.ID,
 				PeerID: v.PeerID,
 				TransparentTransmissionKey: v.TransparentTransmissionKey,
@@ -72,7 +76,9 @@ func QueryRouter(clientid string) string {
 	}
 
 	response, _ := json.Marshal(&SingleRouterProperty{
-		ID: 0,
+		Result: 0,
+		Desc:   "成功",
+		ID:     0,
 	})
 
 	return string(response)
@@ -87,5 +93,9 @@ func QueryRouterHandler(w http.ResponseWriter, r *http.Request) {
 
 	r.ParseForm()
 	id := r.Form.Get("id")
+	if id == "" {
+		fmt.Fprint(w, EncodingGeneralResponse(HTTP_RESPONSE_RESULT_PARAMTER_ERR))
+		return
+	}
 	fmt.Fprint(w, QueryRouter(id))
 }

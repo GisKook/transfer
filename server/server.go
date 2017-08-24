@@ -93,8 +93,10 @@ func main() {
 	fmt.Println("Signal: ", <-chSig)
 
 	// stops service
-	server_upstream.Stop()
 	server_downstream.Stop()
+	log.Println("downstream stop")
+	server_upstream.Stop()
+	log.Println("upstream stop")
 }
 
 func checkError(err error) {

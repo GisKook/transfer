@@ -35,8 +35,8 @@ func (this *DownstreamCallback) OnConnect(c *gotcp.Conn) bool {
 
 func (this *DownstreamCallback) OnClose(c *gotcp.Conn) {
 	_conn := c.GetExtraData().(*conn.Conn)
-	_conn.Close()
 	conn.NewConnsDownstream().Remove(_conn)
+	_conn.Close()
 }
 
 func (this *DownstreamCallback) OnMessage(c *gotcp.Conn, p gotcp.Packet) bool {

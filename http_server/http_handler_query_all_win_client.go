@@ -7,7 +7,14 @@ import (
 	"net/http"
 )
 
+type WinClientPropertyResult struct {
+	Result  uint8                `json:"result"`
+	Desc    string               `json:"desc"`
+	Content []*WinClientProperty `json:"content"`
+}
 type WinClientProperty struct {
+	Result                     uint8  `json:"result"`
+	Desc                       string `json:"desc"`
 	ClientID                   uint64 `json:"ClientID"`
 	PeerID                     uint64 `json:"PeerID"`
 	TransparentTransmissionKey uint32 `json:"Key"`
@@ -30,8 +37,13 @@ func QueryAllWinClients() string {
 			Mode:                       v.Mode,
 		})
 	}
+	result := &WinClientPropertyResult{
+		Result:  0,
+		Desc:    "成功",
+		Content: clients,
+	}
 
-	response, _ := json.Marshal(clients)
+	response, _ := json.Marshal(result)
 
 	return string(response)
 }

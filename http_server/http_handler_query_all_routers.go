@@ -7,7 +7,15 @@ import (
 	"net/http"
 )
 
+type RouterPropertyResult struct {
+	Result  uint8             `json:"result"`
+	Desc    string            `json:"desc"`
+	Content []*RouterProperty `json:"content"`
+}
+
 type RouterProperty struct {
+	Result                     uint8  `json:"result"`
+	Desc                       string `json:"desc"`
 	RegisterID                 uint64 `json:"RegisterID"`
 	PeerID                     uint64 `json:"PeerID"`
 	TransparentTransmissionKey uint32 `json:"Key"`
@@ -31,7 +39,13 @@ func QueryAllRouters() string {
 		})
 	}
 
-	response, _ := json.Marshal(routers)
+	router_reuslt := &RouterPropertyResult{
+		Result:  0,
+		Desc:    "成功",
+		Content: routers,
+	}
+
+	response, _ := json.Marshal(router_reuslt)
 
 	return string(response)
 }
